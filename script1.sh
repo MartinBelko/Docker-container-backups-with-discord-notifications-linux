@@ -11,11 +11,19 @@ smb_password="your_smb_password"
 mount_point="/mnt/backup_mount"
 passphrase="your_passphrase"
 max_backups=7
+log_file="/path/to/logs/backup_log.txt"
 
 # Function to send notification to Discord
 send_discord_notification() {
   local message="$1"
+  local file_path="$2"
   curl -H "Content-Type: application/json" -X POST -d "${message}" "${webhook_url}"
+  if [ -n "${file_path}" ] && [ -f "${file_path}" ]; then
+    echo "Attaching log file: ${file_path}"
+    curl -F "file=@${file_path}" "${webhook_url}"
+  elif [ -n "${file_path}" ]; then
+    echo "Log file not found: ${file_path}"
+  fi
 }
 
 # Function to capture terminal output and handle errors
@@ -36,7 +44,7 @@ capture_output() {
       "fields": [
         {
           "name": "Terminal Output",
-          "value": "${error_message}",
+          "value": "See attached log file for details.",
           "inline": false
         }
       ]
@@ -45,16 +53,23 @@ capture_output() {
 }
 EOF
 )
-    send_discord_notification "${failure_message}"
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Backup failed" >> "$log_file"
+    cat "$output" >> "$log_file"
+    echo "Log file content:"
+    cat "$log_file"
+    send_discord_notification "${failure_message}" "${log_file}"
     rm "$output"
     exit $return_code
   fi
   rm "$output"
 }
 
+# Reset the log file
+> "$log_file"
+
 # Get current date and time
 start_time=$(date +%s)
-current_datetime=$(date +%Y%m%d_%H%M%S)
+current_datetime=$(date '+%Y-%m-%d %H:%M:%S')
 
 # Create backup directory if it doesn't exist
 capture_output mkdir -p "${backup_folder}"
@@ -151,4 +166,4 @@ EOF
 )
 
 # Send success notification to Discord
-send_discord_notification "${success_message}"
+send_discord_notification "${success_message}" ""
