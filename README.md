@@ -1,9 +1,9 @@
 # Docker-container-backups-with-discord-notifications-linux
-Basic script to stop a container and back up the contents, where your docker compose file is located at the same place as the config folders, to a samba share with discord notifications using webhook. 
+A basic script to stop a container and back up its contents. The Docker Compose file and configuration folders should be located in the same directory. The backup is then sent to a Samba share with Discord notifications via a webhook.
 
-Personally i use Hetzner storage box for my backups, and i dont really bother using ssh, so i went back and forth with github copilot, chatgpt and gemini to create whatever this is (i dont know myself (jk)). 
+Personal Note: I use Hetzner Storage Box for my backups and tend to avoid SSH. So, after some back-and-forth with GitHub Copilot, ChatGPT, and Gemini, I concocted whatever this is (I’m still figuring it out myself—just kidding).
 
-Use this script as you like, just a personal project for my homelab, dont know how many iterations this will get, i'll probably forget i even put it here.
+Feel free to use this script as you like. It’s a personal project for my homelab, and I can't predict how many iterations this will go through. I might even forget I shared it here.
 
 Prerequisites:
 - Docker Compose
@@ -13,4 +13,6 @@ Prerequisites:
 - curl
 - gpg
 
-Tested on rocky linux 9.5 on arm64 on my M1 Macbook Air (through UTM) and on x86. 
+Tested Environments:
+- Rocky Linux 9 on ARM64 (via my M1 MacBook Air through UTM)
+- Rocky Linux 9 on x86
