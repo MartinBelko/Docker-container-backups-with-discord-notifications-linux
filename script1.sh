@@ -69,7 +69,7 @@ EOF
 
 # Get current date and time
 start_time=$(date +%s)
-current_datetime=$(date '+%Y-%m-%d %H:%M:%S')
+current_datetime=$(date '+%Y-%m-%d_%H-%M-%S')
 
 # Create backup directory if it doesn't exist
 capture_output mkdir -p "${backup_folder}"
